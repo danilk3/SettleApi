@@ -6,3 +6,5 @@ spring:
   jpa:
     generate-ddl: true
 
+server:
+  port=${PORT:8080}
