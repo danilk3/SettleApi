@@ -1,15 +1,17 @@
 package com.example.settleapi.domain;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -22,13 +24,7 @@ public class User {
 
     private String email;
 
-//    @ManyToMany(fetch = FetchType.LAZY,
-//            cascade = {
-//                    CascadeType.PERSIST,
-//                    CascadeType.MERGE
-//            })
-//    @JoinTable(name = "event_participant",
-//            joinColumns = { @JoinColumn(name = "user_id") },
-//            inverseJoinColumns = { @JoinColumn(name = "event_id") })
-//    private Set<Event> activeEvents = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "participants")
+    private Set<Event> activeEvents = new HashSet<>();
 }

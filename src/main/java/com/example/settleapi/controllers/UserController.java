@@ -3,6 +3,7 @@ package com.example.settleapi.controllers;
 import com.example.settleapi.domain.Event;
 import com.example.settleapi.domain.User;
 import com.example.settleapi.repos.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,27 +11,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+@Slf4j
 @RestController
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
+    // Create new user.
     @PostMapping("user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        System.out.println("Creating new user: " + user);
+        log.debug("Post method \"user\" called.");
+        log.debug("Creating new user: " + user);
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
     }
 
-    @GetMapping("user/{id}")
+    // Get user by id.
+    @GetMapping("user/")
     @ResponseBody
-    public ResponseEntity<User> getUser(@PathVariable("user_id") User user) {
+    public ResponseEntity<User> getUser(@RequestParam("user_id") User user) {
+        log.debug("Post Get \"user\" called.");
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-//    @GetMapping("event/{user_id}/users")
-//    @ResponseBody
-//    public ResponseEntity<Set<User>> getUsersOfEvents(@PathVariable("event_id") Event event) {
-//        return new ResponseEntity<>(event.getParticipants(), HttpStatus.OK);
-//    }
+    // Get active events of the user.
+    @GetMapping("user/{user_id}/events")
+    @ResponseBody
+    public ResponseEntity<Set<Event>> getUsersOfEvents(@PathVariable("user_id") User user) {
+        log.debug("Get method \"user/{user_id}/events\" called.");
+        return new ResponseEntity<>(user.getActiveEvents(), HttpStatus.OK);
+    }
 }

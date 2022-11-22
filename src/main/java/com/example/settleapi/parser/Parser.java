@@ -1,16 +1,14 @@
 package com.example.settleapi.parser;
 
-import com.example.settleapi.domain.Apartment;
 import com.example.settleapi.domain.Event;
-import com.example.settleapi.domain.Filter;
-import org.jsoup.Connection;
+import com.example.settleapi.domain.search.Apartment;
+import com.example.settleapi.domain.search.Filter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,18 +28,25 @@ public class Parser {
     }
 
     public String getUrl() {
-        String url = filter.getCity().equals("Москва") ? moscowBaseLink : spbBaseLink;
-        Integer subwayId = filter.getCity().equals("Москва") ? MetroStations.moscowSubway.get(filter.getSubwayStation()) : MetroStations.spbSubway.get(filter.getSubwayStation());
-        url += filter.getApartmentType().equals("flat") ? "&offer_type=flat" : "&object_type%5B0%5D=1&offer_type=suburban";
-        return moscowBaseLink +
+        String url;
+
+        if (filter.getCity().equals("Москва")) {
+            url = moscowBaseLink + "&metro%5B0%5D=" + MetroStations.moscowSubway.get(filter.getSubwayStation());
+        } else {
+            url = spbBaseLink + "&metro%5B0%5D=" + MetroStations.spbSubway.get(filter.getSubwayStation());
+        }
+
+        if (filter.getApartmentType().equals("flat")) {
+            url += String.format("&offer_type=flat&%s=1&&minfloor=%d", filter.getNumberOfRooms(), filter.getMinFloor());
+        } else {
+            url += "&object_type%5B0%5D=1&offer_type=suburban";
+        }
+        return url +
                 "&checkin=" + event.getDate() +
-                "&checkout=" + event.getDate().plusDays(1) +
-                "&min_beds=" + event.getNumberOfGuests() +
-                "&metro%5B0%5D=" + subwayId;
+                "&checkout=" + event.getDate().plusDays(1);
 
     }
 
-    // оптимизировать!
     public List<Apartment> getApartments() throws IOException {
         List<Apartment> apartments = new ArrayList<>();
 
@@ -53,6 +58,7 @@ public class Parser {
                 .get();
 
         Elements apartmentElements = searchDocument.selectXpath("//article[@data-name='CardComponent']");
+
         for (Element apartmentElement : apartmentElements) {
             String apartmentUrl = apartmentElement.getElementsByClass("_93444fe79c--link--eoxce").attr("href");
             if (apartmentUrl.contains("cian.sutochno.ru")) {
@@ -85,15 +91,17 @@ public class Parser {
 
             String phone = apartmentDocument.selectXpath("//a[@class='a10a3f92e9--phone--_OimW']").first().text();
 
-            Apartment apartment = new Apartment();
-            apartment.setName(title);
-            apartment.setAddress(address);
-            apartment.setImagesUrl(imagesUrls);
-            apartment.setPricePerNight(price);
-            apartment.setFloor(floor);
-            apartment.setDescription(description);
-            apartment.setNumberOfBeds(numberOfBeds);
-            apartment.setContacts(phone);
+            Apartment apartment = Apartment
+                    .builder()
+                    .name(title)
+                    .address(address)
+                    .imagesUrl(imagesUrls)
+                    .price(price)
+                    .floor(floor)
+                    .description(description)
+                    .numberOfBeds(numberOfBeds)
+                    .phoneOfOwner(phone)
+                    .build();
 
             apartments.add(apartment);
         }

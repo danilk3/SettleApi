@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://c-c9q19jh9v56vu056qv06.rw.mdb.yandexcloud.net:6432/g3t5db
+    username: g3t5
+    password: uxdesigng3t5
+  jpa:
+    generate-ddl: true
+
