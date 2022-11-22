@@ -1,4 +1,4 @@
-package com.example.settleapi.domain.search;
+package com.settle.settleapi.domain.search;
 
 import lombok.Builder;
 import lombok.Data;

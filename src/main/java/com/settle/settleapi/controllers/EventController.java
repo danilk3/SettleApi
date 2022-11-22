@@ -1,8 +1,8 @@
-package com.example.settleapi.controllers;
+package com.settle.settleapi.controllers;
 
-import com.example.settleapi.domain.Event;
-import com.example.settleapi.domain.User;
-import com.example.settleapi.repos.EventRepository;
+import com.settle.settleapi.domain.Event;
+import com.settle.settleapi.domain.User;
+import com.settle.settleapi.repos.EventRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

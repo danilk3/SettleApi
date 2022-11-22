@@ -1,10 +1,10 @@
-package com.example.settleapi.controllers;
+package com.settle.settleapi.controllers;
 
-import com.example.settleapi.domain.search.Apartment;
-import com.example.settleapi.domain.Event;
-import com.example.settleapi.domain.search.Filter;
-import com.example.settleapi.parser.Parser;
-import com.example.settleapi.repos.EventRepository;
+import com.settle.settleapi.domain.search.Apartment;
+import com.settle.settleapi.domain.Event;
+import com.settle.settleapi.domain.search.Filter;
+import com.settle.settleapi.parser.Parser;
+import com.settle.settleapi.repos.EventRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

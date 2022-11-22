@@ -1,4 +1,4 @@
-package com.example.settleapi.parser;
+package com.settle.settleapi.parser;
 
 import java.util.HashMap;
 import java.util.Map;

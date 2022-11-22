@@ -1,4 +1,4 @@
-package com.example.settleapi.domain;
+package com.settle.settleapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

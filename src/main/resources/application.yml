@@ -5,6 +5,3 @@ spring:
     password: uxdesigng3t5
   jpa:
     generate-ddl: true
-
-server:
-  port: ${PORT:8080}

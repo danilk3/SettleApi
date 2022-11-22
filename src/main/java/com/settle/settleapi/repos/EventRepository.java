@@ -1,6 +1,6 @@
-package com.example.settleapi.repos;
+package com.settle.settleapi.repos;
 
-import com.example.settleapi.domain.Event;
+import com.settle.settleapi.domain.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

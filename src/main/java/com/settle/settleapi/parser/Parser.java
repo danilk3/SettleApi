@@ -1,8 +1,8 @@
-package com.example.settleapi.parser;
+package com.settle.settleapi.parser;
 
-import com.example.settleapi.domain.Event;
-import com.example.settleapi.domain.search.Apartment;
-import com.example.settleapi.domain.search.Filter;
+import com.settle.settleapi.domain.Event;
+import com.settle.settleapi.domain.search.Apartment;
+import com.settle.settleapi.domain.search.Filter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

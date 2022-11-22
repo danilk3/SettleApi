@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/*.jar
+web: java -jar build/libs/SettleApi-1.0.jar
