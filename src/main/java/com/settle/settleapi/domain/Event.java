@@ -1,6 +1,5 @@
 package com.settle.settleapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +26,9 @@ public class Event {
     @Column(name = "number_of_guests")
     private Integer numberOfGuests;
 
-    @JsonIgnore
+    @OneToMany(mappedBy = "event")
+    private Set<Apartment> apartments;
+
     @ManyToMany
     @JoinTable(
             name = "event_participants",

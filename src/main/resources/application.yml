@@ -5,3 +5,4 @@ spring:
     password: uxdesigng3t5
   jpa:
     generate-ddl: true
+

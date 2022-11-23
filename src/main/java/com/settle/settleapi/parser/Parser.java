@@ -1,8 +1,9 @@
 package com.settle.settleapi.parser;
 
+import com.settle.settleapi.domain.Apartment;
 import com.settle.settleapi.domain.Event;
-import com.settle.settleapi.domain.search.Apartment;
 import com.settle.settleapi.domain.search.Filter;
+import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,27 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@AllArgsConstructor
 public class Parser {
 
     private Filter filter;
 
     private Event event;
 
-    private String moscowBaseLink = "https://www.cian.ru/cat.php?deal_type=rent&engine_version=2&type=2";
-    private String spbBaseLink = "https://spb.cian.ru/cat.php?deal_type=rent&engine_version=2";
-
-    public Parser(Filter filter, Event event) {
-        this.filter = filter;
-        this.event = event;
-    }
-
     public String getUrl() {
         String url;
 
         if (filter.getCity().equals("Москва")) {
-            url = moscowBaseLink + "&metro%5B0%5D=" + MetroStations.moscowSubway.get(filter.getSubwayStation());
+            url = "https://www.cian.ru/cat.php?deal_type=rent&engine_version=2&type=2"
+                    + "&metro%5B0%5D="
+                    + MetroStations.moscowSubway.get(filter.getSubwayStation());
         } else {
-            url = spbBaseLink + "&metro%5B0%5D=" + MetroStations.spbSubway.get(filter.getSubwayStation());
+            url = "https://spb.cian.ru/cat.php?deal_type=rent&engine_version=2"
+                    + "&metro%5B0%5D="
+                    + MetroStations.spbSubway.get(filter.getSubwayStation());
         }
 
         if (filter.getApartmentType().equals("flat")) {
@@ -48,6 +46,7 @@ public class Parser {
     }
 
     public List<Apartment> getApartments() throws IOException {
+
         List<Apartment> apartments = new ArrayList<>();
 
 
@@ -59,7 +58,7 @@ public class Parser {
 
         Elements apartmentElements = searchDocument.selectXpath("//article[@data-name='CardComponent']");
 
-        for (Element apartmentElement : apartmentElements) {
+        for (Element apartmentElement : apartmentElements.subList(0, 10)) {
             String apartmentUrl = apartmentElement.getElementsByClass("_93444fe79c--link--eoxce").attr("href");
             if (apartmentUrl.contains("cian.sutochno.ru")) {
                 continue;
@@ -91,17 +90,16 @@ public class Parser {
 
             String phone = apartmentDocument.selectXpath("//a[@class='a10a3f92e9--phone--_OimW']").first().text();
 
-            Apartment apartment = Apartment
-                    .builder()
-                    .name(title)
-                    .address(address)
-                    .imagesUrl(imagesUrls)
-                    .price(price)
-                    .floor(floor)
-                    .description(description)
-                    .numberOfBeds(numberOfBeds)
-                    .phoneOfOwner(phone)
-                    .build();
+            Apartment apartment = new Apartment();
+            apartment.setName(title);
+            apartment.setAddress(address);
+            apartment.setPrice(price);
+            apartment.setFloor(floor);
+            apartment.setDescription(description);
+            apartment.setNumberOfBeds(numberOfBeds);
+            apartment.setPhoneOfOwner(phone);
+            apartment.setImageUrls(imagesUrls);
+            apartment.setEvent(event);
 
             apartments.add(apartment);
         }

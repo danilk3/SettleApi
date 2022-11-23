@@ -1,10 +1,12 @@
 package com.settle.settleapi.controllers;
 
-import com.settle.settleapi.domain.search.Apartment;
+import com.settle.settleapi.domain.Apartment;
 import com.settle.settleapi.domain.Event;
 import com.settle.settleapi.domain.search.Filter;
 import com.settle.settleapi.parser.Parser;
+import com.settle.settleapi.repos.ApartmentRepository;
 import com.settle.settleapi.repos.EventRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,10 @@ public class SearchController {
     @Autowired
     private EventRepository eventRepository;
 
+    @Autowired
+    ApartmentRepository apartmentRepository;
+
+    @Operation(summary = "Подбор апартаментов.")
     @GetMapping("search/")
     public ResponseEntity<List<Apartment>> searchApartments(
             @RequestParam(name = "city_name") String cityName,
@@ -34,8 +40,8 @@ public class SearchController {
             @RequestParam(name = "subway") String subway,
             @RequestParam(name = "event_id") Long eventId
     ) throws IOException {
-        log.debug("Get method \"search/\" called.");
-        log.debug("Scrapping cian.ru with parameters: city_name=%s; number_of_rooms=%d; floor_number=%d; from_price=%d; to_price=%d; apart_type=%s; subway=%s; event_id=%d", cityName, numberOfRooms, floorNumber, fromPrice, toPrice, apartmentType, subway, eventId);
+        log.info("Get method \"search/\" called.");
+        log.info(String.format("Scrapping cian.ru with parameters: city_name=%s; number_of_rooms=%d; floor_number=%d; from_price=%d; to_price=%d; apart_type=%s; subway=%s; event_id=%d", cityName, numberOfRooms, floorNumber, fromPrice, toPrice, apartmentType, subway, eventId));
         Event event = eventRepository.findById(eventId).get();
         Filter filter = Filter.builder()
                 .city(cityName)
@@ -47,6 +53,7 @@ public class SearchController {
                 .minFloor(floorNumber)
                 .build();
         List<Apartment> apartments = new Parser(filter, event).getApartments();
+        apartmentRepository.saveAll(apartments);
         return new ResponseEntity<>(apartments, HttpStatus.OK);
     }
 }

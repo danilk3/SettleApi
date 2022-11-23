@@ -3,6 +3,7 @@ package com.settle.settleapi.controllers;
 import com.settle.settleapi.domain.Event;
 import com.settle.settleapi.domain.User;
 import com.settle.settleapi.repos.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,27 +19,31 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // Create new user.
+    @Operation(summary = "Создание пользователя.")
     @PostMapping("user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        log.debug("Post method \"user\" called.");
-        log.debug("Creating new user: " + user);
+        log.info("Post method \"user\" called.");
+        log.info("Creating new user: " + user);
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.CREATED);
     }
 
-    // Get user by id.
+    @Operation(summary = "Получение пользователя по user_id.")
     @GetMapping("user/")
     @ResponseBody
-    public ResponseEntity<User> getUser(@RequestParam("user_id") User user) {
-        log.debug("Post Get \"user\" called.");
+    public ResponseEntity<User> getUser(
+            @RequestParam("user_id") User user
+    ) {
+        log.info("Get method \"user\" called with param user_id = " + user.getUserId());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    // Get active events of the user.
+    @Operation(summary = "Получение активных мероприятий пользователя.")
     @GetMapping("user/{user_id}/events")
     @ResponseBody
-    public ResponseEntity<Set<Event>> getUsersOfEvents(@PathVariable("user_id") User user) {
-        log.debug("Get method \"user/{user_id}/events\" called.");
+    public ResponseEntity<Set<Event>> getUsersOfEvents(
+            @PathVariable("user_id") User user
+    ) {
+        log.info("Get method \"user/{user_id}/events\" called.");
         return new ResponseEntity<>(user.getActiveEvents(), HttpStatus.OK);
     }
 }

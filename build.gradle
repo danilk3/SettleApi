@@ -29,7 +29,7 @@ dependencies {
     // Scrapping.
     implementation 'org.jsoup:jsoup:1.15.3'
 
-    // Documentation.
+    // Open api.
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
 }
 
